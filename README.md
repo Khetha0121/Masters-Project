@@ -7,6 +7,7 @@ The app helps students keep Java practicals organised, choose a final `.java` fi
 ## Features
 
 - UKZN and COMP 102 branded interface.
+- Two role views: Student submission workspace and Academic review dashboard.
 - Student name saved locally in the browser.
 - Java practical and assignment queue with due dates.
 - Filters for all, in-progress, ready, and submitted work.
@@ -35,6 +36,8 @@ Then open [http://localhost:5500](http://localhost:5500).
 
 ## How to use it
 
+### Student view
+
 1. Enter your name in the `Student` field in the header.
 2. Select a practical from the assignment queue.
 3. Click `Prepare` for that practical.
@@ -43,6 +46,16 @@ Then open [http://localhost:5500](http://localhost:5500).
 6. Click `Mark ready for Moodle`.
 7. When connected, open the correct COMP 102 activity in Moodle and upload the same file.
 8. Use the download button at the bottom to export a JSON backup of your records.
+
+### Academic view
+
+1. Click `Academic view` in the header.
+2. Review the shared COMP 102 Java practical queue.
+3. See tasks, prepared file names, due dates, and submission status.
+4. Mark a `Ready` handoff as `Submitted` after it has been checked on Moodle.
+5. Click `Student view` to return to the student workspace.
+
+The current version uses a local role switch for the prototype. Both views read the same browser-stored course data. Production deployment should add authenticated UKZN accounts and a shared database so students and academics can access the same records from different devices.
 
 ## Project structure
 

@@ -1,5 +1,6 @@
 const STORAGE_KEY = 'comp102-assignment-desk-v1';
 const PROFILE_KEY = 'comp102-student-profile-v1';
+const ROLE_KEY = 'comp102-user-role-v1';
 
 const starterTasks = [
   { id: 'p1', title: 'Java Practical 1: Algorithms', type: 'Java practical', due: '2026-08-07', status: 'active', fileName: '' },
@@ -37,6 +38,14 @@ function formatDate(value) { return new Intl.DateTimeFormat('en-ZA', { day: '2-d
 function showToast(message) { toast.textContent = message; toast.classList.add('show'); window.clearTimeout(showToast.timer); showToast.timer = window.setTimeout(() => toast.classList.remove('show'), 3500); }
 function statusLabel(status) { return { active: 'In progress', ready: 'Ready', submitted: 'Submitted' }[status] || status; }
 
+function renderAcademic() {
+  document.querySelector('#academicTotal').textContent = state.tasks.length;
+  document.querySelector('#academicReady').textContent = state.tasks.filter(task => task.status === 'ready').length;
+  document.querySelector('#academicSubmitted').textContent = state.tasks.filter(task => task.status === 'submitted').length;
+  document.querySelector('#academicList').innerHTML = state.tasks.map(task => `
+    <article class="review-row"><div><h3>${escapeHtml(task.title)}</h3><p>${escapeHtml(task.fileName || 'No file prepared')} · Due ${formatDate(task.due)}</p></div><span class="review-badge ${task.status}">${statusLabel(task.status)}</span>${task.status === 'ready' ? `<button class="review-action" data-review-id="${task.id}" type="button">Mark submitted →</button>` : '<span></span>'}</article>`).join('');
+}
+
 function render() {
   const visible = state.tasks.filter(task => currentFilter === 'all' || task.status === currentFilter);
   taskList.innerHTML = visible.length ? visible.map((task, index) => `
@@ -54,6 +63,7 @@ function render() {
 
   assignmentSelect.innerHTML = state.tasks.filter(task => task.status !== 'submitted').map(task => `<option value="${task.id}">${escapeHtml(task.title)}</option>`).join('');
   if (!assignmentSelect.options.length) assignmentSelect.innerHTML = '<option value="">All tasks submitted</option>';
+  renderAcademic();
 }
 
 function escapeHtml(value) { return value.replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;' }[character])); }
@@ -102,6 +112,26 @@ document.querySelector('#exportButton').addEventListener('click', () => {
   link.download = 'comp-102-moodle-handoff.json'; link.click(); URL.revokeObjectURL(link.href); showToast('Backup downloaded to your device.');
 });
 
+function setRole(role) {
+  const academic = role === 'academic';
+  document.body.classList.toggle('academic-mode', academic);
+  document.querySelector('#roleSwitch').textContent = academic ? 'Student view' : 'Academic view';
+  localStorage.setItem(ROLE_KEY, role);
+}
+
+document.querySelector('#roleSwitch').addEventListener('click', () => setRole(document.body.classList.contains('academic-mode') ? 'student' : 'academic'));
+document.querySelector('#backToStudent').addEventListener('click', () => setRole('student'));
+document.querySelector('#academicList').addEventListener('click', event => {
+  const button = event.target.closest('[data-review-id]');
+  if (!button) return;
+  const task = state.tasks.find(item => item.id === button.dataset.reviewId);
+  if (!task) return;
+  task.status = 'submitted';
+  state.submissions = state.submissions.map(submission => submission.taskId === task.id ? { ...submission, moodleStatus: 'Submitted on Moodle' } : submission);
+  saveState(); render(); showToast(`${task.title} marked as submitted.`);
+});
+
 window.addEventListener('online', () => { document.querySelector('#connectionLabel').textContent = 'Connected'; });
 window.addEventListener('offline', () => { document.querySelector('#connectionLabel').textContent = 'Offline-ready'; });
+setRole(localStorage.getItem(ROLE_KEY) || 'student');
 render();

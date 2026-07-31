@@ -13,6 +13,8 @@ button { cursor:pointer; }
 .ukzn-mark small { margin-top:3px; color:var(--ink); font-family:'DM Mono'; font-size:4px; letter-spacing:.06em; }
 .ukzn-sun { margin-bottom:2px; font-size:9px; }
 .topbar-tools { display:flex; align-items:center; gap:22px; }
+.role-switch { min-height:30px; padding:0 10px; border:1px solid var(--ink); background:transparent; color:var(--ink); font-size:10px; font-weight:800; }
+.role-switch:hover { background:var(--ink); color:var(--white); }
 .student-name { display:flex; align-items:center; gap:8px; margin:0; color:var(--muted); font-family:'DM Mono'; font-size:9px; font-weight:400; text-transform:uppercase; }
 .student-name input { width:118px; height:28px; padding:0 8px; border:0; border-bottom:1px solid var(--line); outline:none; background:transparent; color:var(--ink); font-family:'Manrope'; font-size:11px; font-weight:700; }
 .student-name input:focus { border-color:var(--coral); }
@@ -30,6 +32,23 @@ h1,h2,p { margin-top:0; } h1 { margin-bottom:21px; font-size:clamp(37px,5.7vw,70
 .help-strip { display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:25px; align-items:center; margin:75px 0 42px; padding:22px 0; border-top:1px solid var(--line); } .help-strip div { display:grid; grid-template-columns:30px 1fr; column-gap:10px; } .help-number { grid-row:span 2; color:var(--coral); font-family:'DM Mono'; font-size:11px; } .help-strip strong { font-size:11px; } .help-strip p { margin:4px 0 0; color:var(--muted); font-size:10px; line-height:1.4; } .icon-button { display:grid; place-items:center; width:42px; height:42px; border:1px solid var(--ink); background:none; color:var(--ink); font-size:20px; }
 dialog { width:min(430px,calc(100% - 32px)); padding:0; border:0; background:transparent; } dialog::backdrop { background:rgba(16,42,67,.5); } .dialog-card { position:relative; display:flex; flex-direction:column; padding:32px; background:var(--white); box-shadow:var(--shadow); } .dialog-card h2 { margin-bottom:20px; } .dialog-card label { color:var(--ink); } .dialog-card input,.dialog-card select { border-color:var(--line); background:var(--paper); color:var(--ink); } .close-button { position:absolute; top:10px; right:14px; border:0; background:none; font-size:24px; }
 .toast { position:fixed; right:22px; bottom:22px; max-width:330px; padding:13px 17px; background:var(--ink); color:#fff; font-size:12px; opacity:0; pointer-events:none; transform:translateY(12px); transition:opacity .2s, transform .2s; } .toast.show { opacity:1; transform:translateY(0); } .empty-state { padding:40px 10px; color:var(--muted); font-size:13px; text-align:center; }
+.academic-only { display:none; }
+body.academic-mode .student-only { display:none; }
+body.academic-mode .academic-only { display:block; }
+.academic-heading { display:flex; align-items:flex-end; justify-content:space-between; padding:76px 0 55px; }
+.academic-heading h1 { margin-bottom:21px; }
+.academic-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; margin-bottom:52px; border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); }
+.academic-stats div { display:flex; flex-direction:column; gap:4px; padding:20px; border-right:1px solid var(--line); }
+.academic-stats span { font-size:30px; font-weight:800; letter-spacing:-.06em; }
+.academic-stats small { color:var(--muted); font-family:'DM Mono'; font-size:10px; text-transform:uppercase; }
+.review-panel { padding:28px; background:var(--white); border:1px solid var(--line); }
+.academic-list { border-top:1px solid var(--line); }
+.review-row { display:grid; grid-template-columns:1fr auto auto; gap:22px; align-items:center; padding:18px 0; border-bottom:1px solid var(--line); }
+.review-row h3 { margin:0 0 5px; font-size:14px; }
+.review-row p { margin:0; color:var(--muted); font-family:'DM Mono'; font-size:10px; }
+.review-badge { color:var(--muted); font-family:'DM Mono'; font-size:9px; text-transform:uppercase; }
+.review-badge.ready { color:var(--coral); }.review-badge.submitted { color:var(--green); }
+.review-action { padding:0; border:0; background:none; color:var(--ink); font-size:11px; font-weight:800; }
 @keyframes rise { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
 @media (max-width:800px) { .page-shell { width:min(100% - 32px,600px); } .intro { align-items:flex-start; gap:25px; padding:48px 0; } .course-stamp { flex:none; transform:scale(.75) rotate(4deg); transform-origin:top right; margin-right:-25px; } .stats { grid-template-columns:repeat(3,1fr); } .next-deadline { grid-column:1/-1; } .workspace-grid { grid-template-columns:1fr; gap:35px; } .help-strip { grid-template-columns:1fr 1fr; } .icon-button { justify-self:end; } }
-@media (max-width:520px) { .topbar { height:64px; padding:0 16px; } .topbar-tools { gap:10px; } .student-name span { display:none; } .student-name input { width:92px; } .offline-pill { font-size:0; } .intro { padding:42px 0 38px; } h1 { font-size:42px; } .course-stamp { display:none; } .stats { grid-template-columns:repeat(3,1fr); } .stat { padding:15px 10px; } .stat-number { font-size:24px; } .stat span:last-child { font-size:8px; } .section-heading { align-items:flex-start; flex-direction:column; gap:15px; } .task-card { grid-template-columns:8px 1fr; } .task-card > div:last-child { grid-column:2; display:flex; align-items:center; gap:15px; } .task-status { margin:0; } .submission-panel { padding:23px; } .help-strip { grid-template-columns:1fr; } .icon-button { justify-self:start; } }
+@media (max-width:520px) { .topbar { height:64px; padding:0 16px; } .topbar-tools { gap:10px; } .student-name span { display:none; } .student-name input { width:92px; } .role-switch { padding:0 7px; font-size:9px; } .offline-pill { font-size:0; } .intro { padding:42px 0 38px; } h1 { font-size:42px; } .course-stamp { display:none; } .stats { grid-template-columns:repeat(3,1fr); } .stat { padding:15px 10px; } .stat-number { font-size:24px; } .stat span:last-child { font-size:8px; } .section-heading { align-items:flex-start; flex-direction:column; gap:15px; } .task-card { grid-template-columns:8px 1fr; } .task-card > div:last-child { grid-column:2; display:flex; align-items:center; gap:15px; } .task-status { margin:0; } .submission-panel { padding:23px; } .help-strip { grid-template-columns:1fr; } .icon-button { justify-self:start; } .academic-heading { padding:42px 0 38px; } .academic-stats div { padding:15px 10px; } .academic-stats span { font-size:24px; } .review-panel { padding:20px; } .review-row { grid-template-columns:1fr auto; gap:8px; } .review-row .review-action { grid-column:2; grid-row:1 / span 2; } }
