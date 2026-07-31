@@ -89,6 +89,12 @@
       <div id="aiAnswer" class="ai-answer" aria-live="polite">Qwen's answer will appear here.</div>
     </section>
 
+    <section class="code-review-panel student-only" aria-labelledby="codeReviewTitle">
+      <div><p class="eyebrow">Java code lab</p><h2 id="codeReviewTitle">Review before you submit.</h2><p>Paste a Java method or practical attempt and ask Qwen for a learning-focused code review.</p></div>
+      <form id="codeReviewForm"><label for="codeQuestion">Review request</label><input id="codeQuestion" value="Find errors and explain how to improve this Java code." required><label for="javaCode">Java code</label><textarea id="javaCode" class="code-input" required placeholder="public class Main { ... }"></textarea><button class="button button-accent" type="submit">Review Java code <span aria-hidden="true">→</span></button></form>
+      <div id="codeReviewResult" class="code-review-result" aria-live="polite">Your code review will appear here.</div>
+    </section>
+
     <section class="academic-view academic-only" aria-labelledby="academicTitle">
       <div class="academic-heading">
         <div><p class="eyebrow">Academic workspace</p><h1 id="academicTitle">Review COMP 102<br><em>Java practicals.</em></h1><p class="intro-copy">Monitor the submission queue and update each student's Moodle handoff status from one course view.</p></div>

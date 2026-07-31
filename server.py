@@ -130,6 +130,13 @@ class ApiHandler(BaseHTTPRequestHandler):
             self.send_json(submission, 201)
         elif self.path == "/api/chat":
             self.ask_qwen(payload.get("question", ""))
+        elif self.path == "/api/review-code":
+            code = payload.get("code", "").strip()
+            question = payload.get("question", "Review this Java code for correctness, errors, and beginner-friendly improvements.")
+            if not code:
+                self.send_json({"error": "Java code is required"}, 400)
+                return
+            self.ask_qwen(f"{question}\n\nJava code:\n```java\n{code}\n```")
         else:
             self.send_json({"error": "Not found"}, 404)
 

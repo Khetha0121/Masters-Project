@@ -165,6 +165,16 @@ document.querySelector('#aiForm').addEventListener('submit', async event => {
   } catch (error) { answer.textContent = error.message; }
 });
 
+document.querySelector('#codeReviewForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const result = document.querySelector('#codeReviewResult');
+  result.textContent = 'Reviewing Java code with Qwen...';
+  try {
+    const response = await apiRequest('/api/review-code', { method: 'POST', body: JSON.stringify({ question: document.querySelector('#codeQuestion').value, code: document.querySelector('#javaCode').value }) });
+    result.textContent = response.answer;
+  } catch (error) { result.textContent = error.message; }
+});
+
 document.querySelector('#exampleForm').addEventListener('submit', async event => {
   event.preventDefault();
   const question = document.querySelector('#exampleQuestion').value;
