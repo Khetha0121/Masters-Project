@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#102a43">
+  <title>COMP 102 | Assignment Desk</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="COMP 102 Assignment Desk home">
+      <span class="ukzn-mark" aria-label="UKZN logo" role="img"><span class="ukzn-sun">✦</span><strong>UKZN</strong><small>EST. 2004</small></span>
+      <span>Assignment Desk<small>UKZN Computer Science</small></span>
+    </a>
+    <div class="topbar-tools">
+      <label class="student-name" for="studentName"><span>Student</span><input id="studentName" type="text" maxlength="40" placeholder="Your name" aria-label="Your name"></label>
+      <div class="offline-pill"><span class="status-dot"></span><span id="connectionLabel">Offline-ready</span></div>
+    </div>
+  </header>
+
+  <main id="top" class="page-shell">
+    <section class="intro" aria-labelledby="pageTitle">
+      <div>
+        <p class="eyebrow">2026 academic workspace</p>
+        <h1 id="pageTitle">Keep your COMP 102 work<br><em>ready to submit.</em></h1>
+        <p class="intro-copy">Keep your COMP 102 programming practicals organised and ready for Moodle. Your progress stays in this browser, even when campus Wi-Fi does not.</p>
+      </div>
+      <div class="course-stamp" aria-label="Course information">
+        <span>UKZN</span>
+        <strong>COMP<br>102</strong>
+        <small>Programming<br>Practicals</small>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="Course summary">
+      <div class="stat"><span class="stat-number" id="totalCount">0</span><span>all tasks</span></div>
+      <div class="stat"><span class="stat-number" id="readyCount">0</span><span>ready to submit</span></div>
+      <div class="stat"><span class="stat-number" id="submittedCount">0</span><span>submitted</span></div>
+      <div class="next-deadline"><span>Next deadline</span><strong id="nextDeadline">No deadlines yet</strong></div>
+    </section>
+
+    <section class="workspace-grid">
+      <div class="tasks-panel">
+        <div class="section-heading">
+          <div><p class="eyebrow">Your workload</p><h2>Assignment queue</h2></div>
+          <button class="button button-dark" id="addTaskButton" type="button"><span aria-hidden="true">+</span> Add task</button>
+        </div>
+        <div class="filter-row" role="group" aria-label="Filter assignments">
+          <button class="filter active" data-filter="all" type="button">All</button>
+          <button class="filter" data-filter="active" type="button">In progress</button>
+          <button class="filter" data-filter="ready" type="button">Ready</button>
+          <button class="filter" data-filter="submitted" type="button">Submitted</button>
+        </div>
+        <div id="taskList" class="task-list"></div>
+      </div>
+
+      <aside class="submission-panel" aria-labelledby="submissionTitle">
+        <div class="panel-kicker"><span class="panel-icon">↗</span><span id="submissionState">Submission workspace</span></div>
+        <h2 id="submissionTitle">Prepare a Moodle handoff</h2>
+        <p>Select an assignment to attach your final file and create a submission record for when Moodle is available.</p>
+        <form id="submissionForm">
+          <label for="assignmentSelect">Assignment</label>
+          <select id="assignmentSelect" required></select>
+          <label for="fileInput">Final file</label>
+          <label class="file-drop" for="fileInput" id="fileDrop">
+            <span class="upload-icon">↑</span>
+            <span><strong id="fileName">Choose a file</strong><small>PDF, DOCX, ZIP or source file</small></span>
+          </label>
+          <input id="fileInput" type="file" accept=".pdf,.doc,.docx,.zip,.py,.java,.c,.cpp,.txt" required>
+          <label class="check-row"><input type="checkbox" id="confirmCheck" required><span>I checked the file and it is my final version.</span></label>
+          <button class="button button-accent" type="submit">Mark ready for Moodle <span aria-hidden="true">→</span></button>
+        </form>
+        <p class="privacy-note"><span aria-hidden="true">◉</span> Files are not uploaded anywhere. This page only stores the file name and submission details locally.</p>
+      </aside>
+    </section>
+
+    <section class="help-strip">
+      <div><span class="help-number">01</span><strong>Work offline</strong><p>Your queue is saved automatically in this browser.</p></div>
+      <div><span class="help-number">02</span><strong>Prepare the handoff</strong><p>Attach your final file and mark it ready.</p></div>
+      <div><span class="help-number">03</span><strong>Submit on Moodle</strong><p>When connected, use the record as your checklist.</p></div>
+      <button class="icon-button" id="exportButton" type="button" title="Download a backup of your assignment records" aria-label="Download a backup of your assignment records">↓</button>
+    </section>
+  </main>
+
+  <dialog id="taskDialog">
+    <form method="dialog" id="taskForm" class="dialog-card">
+      <button class="close-button" value="cancel" aria-label="Close">×</button>
+      <p class="eyebrow">New COMP 102 task</p><h2>Add assignment</h2>
+      <label for="taskTitle">Task name</label><input id="taskTitle" required placeholder="e.g. Practical 3: Loops">
+      <label for="taskDue">Due date</label><input id="taskDue" type="date" required>
+      <label for="taskType">Type</label><select id="taskType"><option>Assignment</option><option>Practical</option><option>Test preparation</option><option>Project</option></select>
+      <button class="button button-dark" value="default" type="submit">Add to queue</button>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
