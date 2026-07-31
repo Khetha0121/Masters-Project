@@ -19,6 +19,7 @@ The app helps students keep Java practicals organised, choose a final `.java` fi
 - Offline mode needs no framework, build step, database, or external API.
 - Optional local Qwen integration through Ollama.
 - Approved-example JSONL export for Qwen fine-tuning.
+- Academic Qwen evaluation workspace with pass and needs-improvement labels.
 - Reproducible LoRA fine-tuning script for Qwen2.5-Coder.
 
 ## Dynamic Qwen mode
@@ -84,6 +85,13 @@ Then open [http://localhost:5500](http://localhost:5500).
 3. See tasks, prepared file names, due dates, and submission status.
 4. Mark a `Ready` handoff as `Submitted` after it has been checked on Moodle.
 5. Click `Student view` to return to the student workspace.
+
+### Model evaluation
+
+1. In Academic view, enter a Java test question and the expected answer guidance.
+2. Click `Run evaluation` to send the test to Qwen through the local backend.
+3. Mark the response `Pass answer` or `Needs improvement`.
+4. Use the evaluation history to track model quality before adding examples to the fine-tuning dataset.
 
 The current version uses a local role switch for the prototype. Both views read the same browser-stored course data. Production deployment should add authenticated UKZN accounts and a shared database so students and academics can access the same records from different devices.
 
