@@ -1,6 +1,7 @@
 const STORAGE_KEY = 'comp102-assignment-desk-v1';
 const PROFILE_KEY = 'comp102-student-profile-v1';
 const ROLE_KEY = 'comp102-user-role-v1';
+const API_BASE = window.location.protocol === 'file:' ? 'http://127.0.0.1:8000' : '';
 
 const starterTasks = [
   { id: 'p1', title: 'Java Practical 1: Algorithms', type: 'Java practical', due: '2026-08-07', status: 'active', fileName: '' },
@@ -17,6 +18,7 @@ const starterTasks = [
 let state = loadState();
 let currentFilter = 'all';
 let academicFilter = 'all';
+let apiOnline = false;
 const taskList = document.querySelector('#taskList');
 const assignmentSelect = document.querySelector('#assignmentSelect');
 const fileInput = document.querySelector('#fileInput');
@@ -34,6 +36,11 @@ function loadState() {
 }
 
 function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+async function apiRequest(path, options = {}) {
+  const response = await fetch(`${API_BASE}${path}`, { headers: { 'Content-Type': 'application/json' }, ...options });
+  if (!response.ok) throw new Error((await response.json().catch(() => ({}))).error || 'Backend request failed');
+  return response.json();
+}
 function loadStudentName() { return localStorage.getItem(PROFILE_KEY) || 'Dalla'; }
 function formatDate(value) { return new Intl.DateTimeFormat('en-ZA', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(`${value}T12:00:00`)); }
 function showToast(message) { toast.textContent = message; toast.classList.add('show'); window.clearTimeout(showToast.timer); showToast.timer = window.setTimeout(() => toast.classList.remove('show'), 3500); }
@@ -47,6 +54,8 @@ function renderAcademic() {
   document.querySelector('#academicList').innerHTML = visibleTasks.length ? visibleTasks.map(task => `
     <article class="review-row"><div><h3>${escapeHtml(task.title)}</h3><p>${escapeHtml(task.fileName || 'No file prepared')} · Due ${formatDate(task.due)}</p></div><span class="review-badge ${task.status}">${statusLabel(task.status)}</span>${task.status === 'ready' ? `<button class="review-action" data-review-id="${task.id}" type="button">Mark submitted →</button>` : '<span></span>'}</article>`).join('')
     : '<div class="empty-state">No tasks match this review filter.</div>';
+  const examples = state.examples || [];
+  document.querySelector('#exampleList').innerHTML = examples.length ? examples.map(example => `<article class="example-row"><div><strong>${escapeHtml(example.question)}</strong><p>${escapeHtml(example.answer)}</p></div><span>${example.status === 'pending' ? `<button data-example-id="${example.id}" type="button">Approve →</button>` : 'Approved'}</span></article>`).join('') : '<div class="empty-state">No training examples yet.</div>';
 }
 
 function render() {
@@ -90,7 +99,9 @@ document.querySelector('#taskForm').addEventListener('submit', event => {
   const title = document.querySelector('#taskTitle').value.trim();
   const due = document.querySelector('#taskDue').value;
   const type = document.querySelector('#taskType').value;
-  state.tasks.push({ id: `task-${Date.now()}`, title, due, type, status: 'active', fileName: '' });
+  const task = { id: `task-${Date.now()}`, title, due, type, status: 'active', fileName: '' };
+  state.tasks.push(task);
+  if (apiOnline) apiRequest('/api/tasks', { method: 'POST', body: JSON.stringify({ title, due, type }) }).catch(() => {});
   saveState(); render(); event.target.closest('dialog').close(); event.target.reset(); showToast('Task added to your COMP 102 queue.');
 });
 
@@ -104,6 +115,7 @@ document.querySelector('#submissionForm').addEventListener('submit', event => {
   if (!task || !selectedFile) return;
   task.status = 'ready'; task.fileName = selectedFile.name;
   state.submissions.push({ taskId: task.id, taskTitle: task.title, fileName: selectedFile.name, preparedAt: new Date().toISOString(), moodleStatus: 'Ready to upload when connected' });
+  if (apiOnline) apiRequest('/api/submissions', { method: 'POST', body: JSON.stringify({ taskId: task.id, fileName: selectedFile.name }) }).catch(() => {});
   saveState(); render(); event.target.reset(); fileName.textContent = 'Choose a file';
   document.querySelector('#submissionState').textContent = 'Handoff prepared'; showToast(`${task.title} is ready for Moodle.`);
 });
@@ -140,7 +152,48 @@ document.querySelector('#academicList').addEventListener('click', event => {
   saveState(); render(); showToast(`${task.title} marked as submitted.`);
 });
 
+document.querySelector('#aiForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const answer = document.querySelector('#aiAnswer');
+  answer.textContent = 'Asking Qwen...';
+  try {
+    const result = await apiRequest('/api/chat', { method: 'POST', body: JSON.stringify({ question: document.querySelector('#aiQuestion').value }) });
+    answer.textContent = result.answer;
+  } catch (error) { answer.textContent = error.message; }
+});
+
+document.querySelector('#exampleForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const question = document.querySelector('#exampleQuestion').value;
+  const answer = document.querySelector('#exampleAnswer').value;
+  try {
+    const example = apiOnline ? await apiRequest('/api/examples', { method: 'POST', body: JSON.stringify({ question, answer }) }) : { id: `example-${Date.now()}`, question, answer, status: 'pending' };
+    state.examples = [...(state.examples || []), example];
+    saveState(); renderAcademic(); event.target.reset(); showToast('Training example added for academic review.');
+  } catch (error) { showToast(error.message); }
+});
+
+document.querySelector('#exampleList').addEventListener('click', async event => {
+  const button = event.target.closest('[data-example-id]');
+  if (!button) return;
+  const example = (state.examples || []).find(item => item.id === button.dataset.exampleId);
+  if (!example) return;
+  example.status = 'approved';
+  if (apiOnline) await apiRequest(`/api/examples/${example.id}`, { method: 'PATCH', body: JSON.stringify({ status: 'approved' }) }).catch(() => {});
+  saveState(); renderAcademic(); showToast('Example approved for Qwen fine-tuning.');
+});
+
 window.addEventListener('online', () => { document.querySelector('#connectionLabel').textContent = 'Connected'; });
 window.addEventListener('offline', () => { document.querySelector('#connectionLabel').textContent = 'Offline-ready'; });
 setRole(localStorage.getItem(ROLE_KEY) || 'student');
 render();
+
+(async function hydrateFromBackend() {
+  try {
+    const remote = await apiRequest('/api/state');
+    state = remote;
+    apiOnline = true;
+    document.querySelector('#connectionLabel').textContent = 'Backend connected';
+    render();
+  } catch { document.querySelector('#connectionLabel').textContent = 'Offline-ready'; }
+}());

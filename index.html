@@ -83,6 +83,12 @@
       <button class="icon-button" id="exportButton" type="button" title="Download a backup of your assignment records" aria-label="Download a backup of your assignment records">↓</button>
     </section>
 
+    <section class="ai-panel student-only" aria-labelledby="aiTitle">
+      <div><p class="eyebrow">Qwen Java tutor</p><h2 id="aiTitle">Ask before you submit.</h2><p>Test a COMP 102 Java question locally with Qwen. Your question stays on this computer when Ollama is running.</p></div>
+      <form id="aiForm"><label for="aiQuestion">Java question</label><textarea id="aiQuestion" required placeholder="e.g. Explain how a for loop works in Java."></textarea><button class="button button-accent" type="submit">Ask Qwen <span aria-hidden="true">→</span></button></form>
+      <div id="aiAnswer" class="ai-answer" aria-live="polite">Qwen's answer will appear here.</div>
+    </section>
+
     <section class="academic-view academic-only" aria-labelledby="academicTitle">
       <div class="academic-heading">
         <div><p class="eyebrow">Academic workspace</p><h1 id="academicTitle">Review COMP 102<br><em>Java practicals.</em></h1><p class="intro-copy">Monitor the submission queue and update each student's Moodle handoff status from one course view.</p></div>
@@ -92,6 +98,7 @@
         <div><span id="academicTotal">0</span><small>tasks</small></div><div><span id="academicReady">0</span><small>ready for review</small></div><div><span id="academicSubmitted">0</span><small>submitted</small></div>
       </div>
       <div class="review-panel"><div class="section-heading"><div><p class="eyebrow">Course activity</p><h2>Submission review</h2></div><div class="academic-actions"><button class="button button-dark" id="academicAddTask" type="button">+ Add practical</button><button class="button button-outline" id="backToStudent" type="button">Student view</button></div></div><div class="academic-filters" role="group" aria-label="Filter academic review"><button class="academic-filter active" data-academic-filter="all" type="button">All</button><button class="academic-filter" data-academic-filter="active" type="button">In progress</button><button class="academic-filter" data-academic-filter="ready" type="button">Ready</button><button class="academic-filter" data-academic-filter="submitted" type="button">Submitted</button></div><div id="academicList" class="academic-list"></div></div>
+      <div class="training-panel"><div><p class="eyebrow">Fine-tuning dataset</p><h2>Approve Java examples</h2><p>Turn reviewed question-and-answer pairs into JSONL data for Qwen fine-tuning.</p></div><form id="exampleForm"><label for="exampleQuestion">Student question</label><textarea id="exampleQuestion" required placeholder="What should the student ask?"></textarea><label for="exampleAnswer">Approved tutor answer</label><textarea id="exampleAnswer" required placeholder="Write the correct Java explanation or solution."></textarea><button class="button button-dark" type="submit">Add training example</button></form><div id="exampleList" class="example-list"></div><a class="dataset-link" href="/api/dataset.jsonl">Download approved JSONL dataset</a></div>
     </section>
   </main>
 

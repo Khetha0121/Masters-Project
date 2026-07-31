@@ -16,7 +16,37 @@ The app helps students keep Java practicals organised, choose a final `.java` fi
 - Browser `localStorage` persistence for tasks and submission records.
 - JSON backup download for moving records to another device.
 - Responsive layout for desktop and mobile screens.
-- No framework, build step, database, or external API required.
+- Offline mode needs no framework, build step, database, or external API.
+- Optional local Qwen integration through Ollama.
+- Approved-example JSONL export for Qwen fine-tuning.
+- Reproducible LoRA fine-tuning script for Qwen2.5-Coder.
+
+## Dynamic Qwen mode
+
+The browser-only mode works offline with local browser storage. For shared data and Qwen integration, run the Python backend:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python server.py
+```
+
+Open [http://localhost:8000](http://localhost:8000). The backend stores shared tasks and training examples in `data.json`, which is intentionally ignored by Git because it may contain student work.
+
+To run Qwen locally, install Ollama, then pull the configured model:
+
+```powershell
+ollama pull qwen2.5-coder:1.5b
+```
+
+The Student view sends Java questions to Qwen through the backend. The Academic view can add and approve question-and-answer examples. Download the approved data from `Download approved JSONL dataset`, then fine-tune:
+
+```powershell
+python fine_tune_qwen.py --data comp102-java-training.jsonl
+```
+
+The training script uses LoRA and saves the adapter under `models/qwen-comp102-java`. Training requires a suitable Python environment and GPU or enough CPU memory; the web app does not train a model in the browser.
 
 ## Run locally
 
