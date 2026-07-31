@@ -2,15 +2,15 @@ const STORAGE_KEY = 'comp102-assignment-desk-v1';
 const PROFILE_KEY = 'comp102-student-profile-v1';
 
 const starterTasks = [
-  { id: 'p1', title: 'Programming Practical 1: Algorithms', type: 'Programming practical', due: '2026-08-07', status: 'active', fileName: '' },
+  { id: 'p1', title: 'Java Practical 1: Algorithms', type: 'Java practical', due: '2026-08-07', status: 'active', fileName: '' },
   { id: 'a1', title: 'Assignment 1: Problem solving', type: 'Assignment', due: '2026-08-14', status: 'active', fileName: '' },
-  { id: 'p2', title: 'Programming Practical 2: Variables & input', type: 'Programming practical', due: '2026-08-21', status: 'ready', fileName: 'comp102_practical2.py' },
-  { id: 'p3', title: 'Programming Practical 3: Selection & loops', type: 'Programming practical', due: '2026-08-28', status: 'active', fileName: '' },
+  { id: 'p2', title: 'Java Practical 2: Variables & input', type: 'Java practical', due: '2026-08-21', status: 'ready', fileName: 'comp102_practical2.java' },
+  { id: 'p3', title: 'Java Practical 3: Selection & loops', type: 'Java practical', due: '2026-08-28', status: 'active', fileName: '' },
   { id: 'a2', title: 'Assignment 2: Control flow', type: 'Assignment', due: '2026-09-04', status: 'active', fileName: '' },
-  { id: 'p4', title: 'Programming Practical 4: Functions', type: 'Programming practical', due: '2026-09-11', status: 'active', fileName: '' },
-  { id: 'p5', title: 'Programming Practical 5: Arrays', type: 'Programming practical', due: '2026-09-18', status: 'active', fileName: '' },
-  { id: 'p6', title: 'Programming Practical 6: Strings', type: 'Programming practical', due: '2026-09-25', status: 'active', fileName: '' },
-  { id: 'p7', title: 'Programming Practical 7: File handling', type: 'Programming practical', due: '2026-10-02', status: 'active', fileName: '' }
+  { id: 'p4', title: 'Java Practical 4: Methods', type: 'Java practical', due: '2026-09-11', status: 'active', fileName: '' },
+  { id: 'p5', title: 'Java Practical 5: Arrays', type: 'Java practical', due: '2026-09-18', status: 'active', fileName: '' },
+  { id: 'p6', title: 'Java Practical 6: Strings', type: 'Java practical', due: '2026-09-25', status: 'active', fileName: '' },
+  { id: 'p7', title: 'Java Practical 7: File handling', type: 'Java practical', due: '2026-10-02', status: 'active', fileName: '' }
 ];
 
 let state = loadState();

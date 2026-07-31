@@ -1,16 +1,16 @@
 # COMP 102 Assignment Desk
 
-An offline-first assignment and programming practical tracker for **UKZN COMP 102 students**.
+An offline-first assignment and Java practical tracker for **UKZN COMP 102 students**.
 
-The app helps students keep practicals organised, choose a final file, prepare a Moodle handoff record, and keep their task list available when campus connectivity is unreliable.
+The app helps students keep Java practicals organised, choose a final `.java` file, prepare a Moodle handoff record, and keep their task list available when campus connectivity is unreliable.
 
 ## Features
 
 - UKZN and COMP 102 branded interface.
 - Student name saved locally in the browser.
-- Programming practical and assignment queue with due dates.
+- Java practical and assignment queue with due dates.
 - Filters for all, in-progress, ready, and submitted work.
-- Local file-name selection for PDF, DOCX, ZIP, and source files.
+- Local file-name selection for PDF, DOCX, ZIP, and Java source files.
 - Moodle handoff preparation without uploading files to a third party.
 - Browser `localStorage` persistence for tasks and submission records.
 - JSON backup download for moving records to another device.
