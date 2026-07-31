@@ -91,7 +91,7 @@
       <div class="academic-stats" aria-label="Academic summary">
         <div><span id="academicTotal">0</span><small>tasks</small></div><div><span id="academicReady">0</span><small>ready for review</small></div><div><span id="academicSubmitted">0</span><small>submitted</small></div>
       </div>
-      <div class="review-panel"><div class="section-heading"><div><p class="eyebrow">Course activity</p><h2>Submission review</h2></div><button class="button button-dark" id="backToStudent" type="button">Student view</button></div><div id="academicList" class="academic-list"></div></div>
+      <div class="review-panel"><div class="section-heading"><div><p class="eyebrow">Course activity</p><h2>Submission review</h2></div><div class="academic-actions"><button class="button button-dark" id="academicAddTask" type="button">+ Add practical</button><button class="button button-outline" id="backToStudent" type="button">Student view</button></div></div><div class="academic-filters" role="group" aria-label="Filter academic review"><button class="academic-filter active" data-academic-filter="all" type="button">All</button><button class="academic-filter" data-academic-filter="active" type="button">In progress</button><button class="academic-filter" data-academic-filter="ready" type="button">Ready</button><button class="academic-filter" data-academic-filter="submitted" type="button">Submitted</button></div><div id="academicList" class="academic-list"></div></div>
     </section>
   </main>
 
@@ -101,7 +101,7 @@
       <p class="eyebrow">New COMP 102 task</p><h2>Add assignment</h2>
       <label for="taskTitle">Task name</label><input id="taskTitle" required placeholder="e.g. Practical 3: Loops">
       <label for="taskDue">Due date</label><input id="taskDue" type="date" required>
-      <label for="taskType">Type</label><select id="taskType"><option>Assignment</option><option>Practical</option><option>Test preparation</option><option>Project</option></select>
+      <label for="taskType">Type</label><select id="taskType"><option>Java practical</option><option>Assignment</option><option>Practical</option><option>Test preparation</option><option>Project</option></select>
       <button class="button button-dark" value="default" type="submit">Add to queue</button>
     </form>
   </dialog>

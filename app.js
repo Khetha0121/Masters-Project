@@ -16,6 +16,7 @@ const starterTasks = [
 
 let state = loadState();
 let currentFilter = 'all';
+let academicFilter = 'all';
 const taskList = document.querySelector('#taskList');
 const assignmentSelect = document.querySelector('#assignmentSelect');
 const fileInput = document.querySelector('#fileInput');
@@ -42,8 +43,10 @@ function renderAcademic() {
   document.querySelector('#academicTotal').textContent = state.tasks.length;
   document.querySelector('#academicReady').textContent = state.tasks.filter(task => task.status === 'ready').length;
   document.querySelector('#academicSubmitted').textContent = state.tasks.filter(task => task.status === 'submitted').length;
-  document.querySelector('#academicList').innerHTML = state.tasks.map(task => `
-    <article class="review-row"><div><h3>${escapeHtml(task.title)}</h3><p>${escapeHtml(task.fileName || 'No file prepared')} · Due ${formatDate(task.due)}</p></div><span class="review-badge ${task.status}">${statusLabel(task.status)}</span>${task.status === 'ready' ? `<button class="review-action" data-review-id="${task.id}" type="button">Mark submitted →</button>` : '<span></span>'}</article>`).join('');
+  const visibleTasks = state.tasks.filter(task => academicFilter === 'all' || task.status === academicFilter);
+  document.querySelector('#academicList').innerHTML = visibleTasks.length ? visibleTasks.map(task => `
+    <article class="review-row"><div><h3>${escapeHtml(task.title)}</h3><p>${escapeHtml(task.fileName || 'No file prepared')} · Due ${formatDate(task.due)}</p></div><span class="review-badge ${task.status}">${statusLabel(task.status)}</span>${task.status === 'ready' ? `<button class="review-action" data-review-id="${task.id}" type="button">Mark submitted →</button>` : '<span></span>'}</article>`).join('')
+    : '<div class="empty-state">No tasks match this review filter.</div>';
 }
 
 function render() {
@@ -121,6 +124,12 @@ function setRole(role) {
 
 document.querySelector('#roleSwitch').addEventListener('click', () => setRole(document.body.classList.contains('academic-mode') ? 'student' : 'academic'));
 document.querySelector('#backToStudent').addEventListener('click', () => setRole('student'));
+document.querySelector('#academicAddTask').addEventListener('click', () => document.querySelector('#taskDialog').showModal());
+document.querySelectorAll('.academic-filter').forEach(button => button.addEventListener('click', () => {
+  academicFilter = button.dataset.academicFilter;
+  document.querySelectorAll('.academic-filter').forEach(item => item.classList.toggle('active', item === button));
+  renderAcademic();
+}));
 document.querySelector('#academicList').addEventListener('click', event => {
   const button = event.target.closest('[data-review-id]');
   if (!button) return;
