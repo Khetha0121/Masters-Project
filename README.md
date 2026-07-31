@@ -18,6 +18,7 @@ The app helps students keep Java practicals organised, choose a final `.java` fi
 - Responsive layout for desktop and mobile screens.
 - Offline mode needs no framework, build step, database, or external API.
 - Optional local Qwen integration through Ollama.
+- Student Java code review workspace for learning-focused feedback.
 - Approved-example JSONL export for Qwen fine-tuning.
 - Academic Qwen evaluation workspace with pass and needs-improvement labels.
 - Reproducible LoRA fine-tuning script for Qwen2.5-Coder.
@@ -77,6 +78,8 @@ Then open [http://localhost:5500](http://localhost:5500).
 6. Click `Mark ready for Moodle`.
 7. When connected, open the correct COMP 102 activity in Moodle and upload the same file.
 8. Use the download button at the bottom to export a JSON backup of your records.
+
+The Student view also includes `Review before you submit`, where a Java snippet can be sent to Qwen for an explanation of errors and possible improvements.
 
 ### Academic view
 
