@@ -1,6 +1,7 @@
 const STORAGE_KEY = 'comp102-assignment-desk-v1';
 const PROFILE_KEY = 'comp102-student-profile-v1';
 const ROLE_KEY = 'comp102-user-role-v1';
+const EVALUATION_KEY = 'comp102-qwen-evaluations-v1';
 const API_BASE = window.location.protocol === 'file:' ? 'http://127.0.0.1:8000' : '';
 
 const starterTasks = [
@@ -19,6 +20,7 @@ let state = loadState();
 let currentFilter = 'all';
 let academicFilter = 'all';
 let apiOnline = false;
+let evaluations = JSON.parse(localStorage.getItem(EVALUATION_KEY) || '[]');
 const taskList = document.querySelector('#taskList');
 const assignmentSelect = document.querySelector('#assignmentSelect');
 const fileInput = document.querySelector('#fileInput');
@@ -56,6 +58,7 @@ function renderAcademic() {
     : '<div class="empty-state">No tasks match this review filter.</div>';
   const examples = state.examples || [];
   document.querySelector('#exampleList').innerHTML = examples.length ? examples.map(example => `<article class="example-row"><div><strong>${escapeHtml(example.question)}</strong><p>${escapeHtml(example.answer)}</p></div><span>${example.status === 'pending' ? `<button data-example-id="${example.id}" type="button">Approve →</button>` : 'Approved'}</span></article>`).join('') : '<div class="empty-state">No training examples yet.</div>';
+  document.querySelector('#evaluationHistory').innerHTML = evaluations.length ? evaluations.slice().reverse().map(item => `<article class="evaluation-record"><div><strong>${escapeHtml(item.question)}</strong><p>${escapeHtml(item.answer.slice(0, 150))}</p></div><span class="evaluation-status ${item.status}">${item.status}</span></article>`).join('') : '<div class="empty-state">No evaluations recorded yet.</div>';
 }
 
 function render() {
@@ -181,6 +184,29 @@ document.querySelector('#exampleList').addEventListener('click', async event => 
   example.status = 'approved';
   if (apiOnline) await apiRequest(`/api/examples/${example.id}`, { method: 'PATCH', body: JSON.stringify({ status: 'approved' }) }).catch(() => {});
   saveState(); renderAcademic(); showToast('Example approved for Qwen fine-tuning.');
+});
+
+document.querySelector('#evaluationForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const question = document.querySelector('#evaluationQuestion').value;
+  const expected = document.querySelector('#expectedAnswer').value;
+  const result = document.querySelector('#evaluationResult');
+  result.textContent = 'Running Qwen evaluation...';
+  try {
+    const response = await apiRequest('/api/chat', { method: 'POST', body: JSON.stringify({ question: `${question}\n\nExpected answer guidance:\n${expected}` }) });
+    result.textContent = response.answer;
+    document.querySelector('#evaluationActions').hidden = false;
+    document.querySelector('#evaluationActions').dataset.question = question;
+    document.querySelector('#evaluationActions').dataset.answer = response.answer;
+  } catch (error) { result.textContent = error.message; }
+});
+
+document.querySelector('#evaluationActions').addEventListener('click', event => {
+  const status = event.target.dataset.evaluationStatus;
+  if (!status) return;
+  evaluations.push({ question: event.currentTarget.dataset.question, answer: event.currentTarget.dataset.answer, status, createdAt: new Date().toISOString() });
+  localStorage.setItem(EVALUATION_KEY, JSON.stringify(evaluations));
+  event.currentTarget.hidden = true; renderAcademic(); showToast(`Evaluation marked ${status}.`);
 });
 
 window.addEventListener('online', () => { document.querySelector('#connectionLabel').textContent = 'Connected'; });
